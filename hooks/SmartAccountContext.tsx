@@ -176,8 +176,8 @@ export const SmartAccountProvider = ({
     );
 
     // (2) Populate the user operation with `paymasterAndData` from the Base Sepolia paymaster
-    const populatedUserOp = await populateWithPaymaster(userOp, paymaster);
-    /* if transaction gives InvalidParamsRpcError: replacement underpriced, use this instead to increase gas fees by 20%
+   //const populatedUserOp = await populateWithPaymaster(userOp, paymaster);
+     //if transaction gives InvalidParamsRpcError: replacement underpriced, use this instead to increase gas fees by 20%
     const populatedUserOp = await populateWithPaymaster(
       {
         ...userOp,
@@ -190,7 +190,7 @@ export const SmartAccountProvider = ({
       },
       paymaster
     );
-    */
+    
 
     // (3) Hash and sign the populated user operation
     const signedUserOp = await signUserOp(
