@@ -10,11 +10,11 @@ import {
   isHex,
 } from "viem";
 import {
-  BASE_GOERLI_ENTRYPOINT_ADDRESS,
+  BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
   PRE_VERIFICATION_GAS_BUFFER,
   VERIFICATION_GAS_LIMIT_BUFFER,
 } from "./constants";
-import { baseGoerli } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import type { AlchemyProvider } from "@alchemy/aa-alchemy";
 
 /** Wraps an arbitrary object type to enforce that all values are hex-formatted strings */
@@ -82,7 +82,7 @@ const formatUserOpAsHex = (
 };
 
 /**
- * Accepts an unsigned user operation, queries the Base Goerli paymaster, and populates
+ * Accepts an unsigned user operation, queries the Base Sepolia paymaster, and populates
  * the `paymasterAndData` field of the operation with the paymaster's response. This method will
  * also increment the operation's `preVerificationGas` and `verificationGasLimit` to account
  * for the cost of verifying the paymaster.
@@ -90,7 +90,7 @@ const formatUserOpAsHex = (
  * If the paymaster will not sponsor the user operation, this method will throw an error.
  *
  * @param userOp {UserOperationStruct} unsigned user operation to be sponsored
- * @param rpcClient {Client} Public RPC client connected to the Base Goerli Paymaster
+ * @param rpcClient {Client} Public RPC client connected to the Base Sepolia Paymaster
  * @returns {Promise<UserOperationStruct>} unsigned user operation with `paymasterAndData` popuilated
  */
 export const populateWithPaymaster = async (
@@ -101,7 +101,7 @@ export const populateWithPaymaster = async (
   const formattedUserOp: AsHex<UserOperationStruct> = formatUserOpAsHex(userOp);
 
   // First, increment the user op's `preVerificationGas` and `verificationGasLimit` with the
-  // recommended gas buffers to cover verification of the Base Goerli paymaster
+  // recommended gas buffers to cover verification of the Base Sepolia paymaster
   const bufferedUserOp: AsHex<UserOperationStruct> = {
     ...formattedUserOp,
     preVerificationGas: formattedUserOp.preVerificationGas
@@ -118,7 +118,7 @@ export const populateWithPaymaster = async (
       : undefined,
   };
 
-  // Then, query the Base Goerli paymaster with the user operation to determine if it will be sponsored
+  // Then, query the Base Sepolia paymaster with the user operation to determine if it will be sponsored
   try {
     const paymasterResponse: `0x${string}` = await paymaster.request({
       // eth_paymasterAndDataForUserOperation is a relatively new RPC and may throw a type error
@@ -127,9 +127,9 @@ export const populateWithPaymaster = async (
       params: [
         // @ts-ignore
         bufferedUserOp,
-        BASE_GOERLI_ENTRYPOINT_ADDRESS,
+        BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
         // @ts-ignore
-        toHex(baseGoerli.id),
+        toHex(baseSepolia.id),
       ],
     });
 
@@ -211,8 +211,8 @@ const computeUserOpHash = (
     ],
     [
       keccak256(packedUserOp),
-      BASE_GOERLI_ENTRYPOINT_ADDRESS,
-      BigInt(baseGoerli.id),
+      BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
+      BigInt(baseSepolia.id),
     ]
   );
   const userOpHash = keccak256(encodedUserOp);

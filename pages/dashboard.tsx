@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import Head from "next/head";
 import { useSmartAccount } from "../hooks/SmartAccountContext";
-import { BASE_GOERLI_SCAN_URL, NFT_ADDRESS } from "../lib/constants";
+import { BASE_SEPOLIA_SCAN_URL, NFT_ADDRESS } from "../lib/constants";
 import { encodeFunctionData } from "viem";
 import ABI from "../lib/nftABI.json";
 import { ToastContainer, toast } from "react-toastify";
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
       toast.update(toastId, {
         render: (
-          <Alert href={`${BASE_GOERLI_SCAN_URL}/tx/${transactionHash}`}>
+          <Alert href={`${BASE_SEPOLIA_SCAN_URL}/tx/${transactionHash}`}>
             Successfully minted! Click here to see your transaction.
           </Alert>
         ),
@@ -124,7 +124,7 @@ export default function DashboardPage() {
             </p>
             <a
               className="mt-2 text-sm text-gray-500 hover:text-violet-600"
-              href={`${BASE_GOERLI_SCAN_URL}/address/${smartAccountAddress}#tokentxnsErc721`}
+              href={`${BASE_SEPOLIA_SCAN_URL}/address/${smartAccountAddress}#tokentxnsErc721`}
             >
               {smartAccountAddress}
             </a>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
             </p>
             <a
               className="mt-2 text-sm text-gray-500 hover:text-violet-600"
-              href={`${BASE_GOERLI_SCAN_URL}/address/${eoa?.address}`}
+              href={`${BASE_SEPOLIA_SCAN_URL}/address/${eoa?.address}`}
             >
               {eoa?.address}
             </a>

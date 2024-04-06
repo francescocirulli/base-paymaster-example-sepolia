@@ -8,7 +8,7 @@ import {
   custom,
   http,
 } from "viem";
-import { baseGoerli } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import {
   WalletClientSigner,
   type SmartAccountSigner,
@@ -21,9 +21,10 @@ import {
   getDefaultLightAccountFactory,
 } from "@alchemy/aa-accounts";
 import {
-  BASE_GOERLI_ALCHEMY_RPC_URL,
-  BASE_GOERLI_ENTRYPOINT_ADDRESS,
-  BASE_GOERLI_PAYMASTER_URL,
+  BASE_SEPOLIA_ALCHEMY_RPC_URL,
+  BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
+  BASE_SEPOLIA_PAYMASTER_URL,
+  DEFAULT_SEPOLIA_LIGHT_ACCOUNT_FACTORY_ADDRESS,
 } from "../lib/constants";
 import { populateWithPaymaster, signUserOp } from "../lib/user-operations";
 
@@ -85,24 +86,24 @@ export const SmartAccountProvider = ({
     `0x${string}` | undefined
   >();
 
-  // Initialize RPC client connected to the Base Goerli Paymaster. Used to populate
+  // Initialize RPC client connected to the Base Sepolia Paymaster. Used to populate
   // `paymasterAndData` field of user operations.
   const paymaster: Client = useMemo(
     () =>
       createPublicClient({
-        chain: baseGoerli,
-        transport: http(BASE_GOERLI_PAYMASTER_URL),
+        chain: baseSepolia,
+        transport: http(BASE_SEPOLIA_PAYMASTER_URL),
       }),
     []
   );
 
-  // Initialize RPC client connected to Alchemy's Base Goerli RPC URL. Used to submit
+  // Initialize RPC client connected to Alchemy's Base Sepolia RPC URL. Used to submit
   // signed user operations to the network
   const bundler: PublicErc4337Client = useMemo(
     () =>
       createPublicErc4337Client({
-        chain: baseGoerli,
-        rpcUrl: `${BASE_GOERLI_ALCHEMY_RPC_URL}/${
+        chain: baseSepolia,
+        rpcUrl: `${BASE_SEPOLIA_ALCHEMY_RPC_URL}/${
           process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string
         }`,
       }),
@@ -118,7 +119,7 @@ export const SmartAccountProvider = ({
       const eoaProvider = await eoa.getEthereumProvider();
       const eoaClient = createWalletClient({
         account: eoa.address as `0x${string}`,
-        chain: baseGoerli,
+        chain: baseSepolia,
         transport: custom(eoaProvider),
       });
 
@@ -134,15 +135,15 @@ export const SmartAccountProvider = ({
       // the user's smart account and connect it to an RPC node
       const provider = new AlchemyProvider({
         apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string,
-        chain: baseGoerli,
-        entryPointAddress: BASE_GOERLI_ENTRYPOINT_ADDRESS,
+        chain: baseSepolia,
+        entryPointAddress: BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
       }).connect(
         (rpcClient) =>
           new LightSmartContractAccount({
-            entryPointAddress: BASE_GOERLI_ENTRYPOINT_ADDRESS,
+            entryPointAddress: BASE_SEPOLIA_ENTRYPOINT_ADDRESS,
             chain: rpcClient.chain,
             owner: signer,
-            factoryAddress: getDefaultLightAccountFactory(rpcClient.chain),
+            factoryAddress: DEFAULT_SEPOLIA_LIGHT_ACCOUNT_FACTORY_ADDRESS,
             rpcClient,
           })
       );
@@ -174,7 +175,7 @@ export const SmartAccountProvider = ({
       transactionRequest
     );
 
-    // (2) Populate the user operation with `paymasterAndData` from the Base Goerli paymaster
+    // (2) Populate the user operation with `paymasterAndData` from the Base Sepolia paymaster
     const populatedUserOp = await populateWithPaymaster(userOp, paymaster);
 
     // (3) Hash and sign the populated user operation
@@ -186,7 +187,7 @@ export const SmartAccountProvider = ({
     // (5) Submit the signed user operation to the bundler and return its hash
     const userOpHash = await bundler.sendUserOperation(
       signedUserOp,
-      BASE_GOERLI_ENTRYPOINT_ADDRESS
+      BASE_SEPOLIA_ENTRYPOINT_ADDRESS
     );
     return userOpHash;
   };

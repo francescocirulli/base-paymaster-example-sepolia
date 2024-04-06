@@ -9,7 +9,7 @@ This app uses:
 - [**Privy**](https://www.privy.io/) for simple onboarding, secure authentication, and powerful embedded wallets
 - [**AccountKit**](https://accountkit.alchemy.com/) for ERC-4337 support and smart contract account functionality
 - [**viem**](https://viem.sh/) for interfacing with wallets and public clients
-- the **Base Goerli Paymaster** for having Coinbase sponsor all gas fees, for both the user and the app
+- the **Base Sepolia Paymaster** for having Coinbase sponsor all gas fees, for both the user and the app
 - [**NextJS**](https://nextjs.org/) as the web application framework
 
 **You can see the deployed app at [`https://base-paymaster-example.vercel.app/`](https://base-paymaster-example.vercel.app/)!**
@@ -28,7 +28,7 @@ Next, create your own `.env` file by running:
 cp .env.example .env
 ```
 
-and then add your Privy App ID and an Alchemy API key (must include support for Base Goerli):
+and then add your Privy App ID and an Alchemy API key (must include support for Base Sepolia):
 
 ```
 NEXT_PUBLIC_PRIVY_APP_ID='insert-your-Privy-App-ID'
@@ -86,7 +86,7 @@ const address = smartAccountAddress;
 // Get an `AlchemyProvider` for the smart account
 const provider = smartAccountProvider;
 
-// Send a user operation with the smart account. Gas fees will be covered by the Base Goerli paymaster
+// Send a user operation with the smart account. Gas fees will be covered by the Base Sepolia paymaster
 const userOpHash = sendSponsoredUserOperation({
     ...insertRpcTransactionRequest
 });
